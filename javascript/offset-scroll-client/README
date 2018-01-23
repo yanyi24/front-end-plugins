@@ -1,0 +1,59 @@
+一、window和document：
+	window：表示浏览器中打开的窗口
+	document：是window对象的一部分。document.body可以写成window.document.body
+二、视口宽高：
+	window.innerHeight和window.outerHeight获取整个窗口的高度，都是只读属性，且没有默认值。
+	outerHeight包括窗口标题、工具栏、状态栏等；
+	innerHeight包括水平滚动条的高度
+	IE8及以下不支持上面两个属性
+	window.innerHeight === document.documentElement.clientHeight === document.body.clientHeight
+
+	document.documentElement.clientHeight不包括整个文档的滚动条，但包括<html></html>冤死的边框
+	document.body.clientHeight几部包括整个文档 的滚动条，也不包括<html></html>元素的边框，也不包括<body></body>的边框跟滚动条
+
+	window.screen.width显示器屏幕的宽度
+	window.screen.availHeight浏览器窗口在屏幕上可占用的垂直空间，即最大高度
+	window.screenTop浏览器窗口在屏幕上的可占用空间上边到屏幕上边界的距离
+
+	offsetWidth一个元素的布局宽度，是一种元素css宽度的衡量标准，包括元素的边框、内边距和元素的垂直滚动条宽度以及css设置的宽度值
+
+	offsetTop当前元素相对于其offsetParent元素的顶部的距离
+		offsetParent返回一个指向最近的包含钙元素的定位元素。若没有定位元素，则为最近个table元素或根元素（标准模式下为HTML，怪异模式下为body）。
+	
+	小结：(获取文档的高度)
+	let height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+	let width = ...
+
+	计算元素距离文档顶部的距离
+三、滚动高度
+	window.scrollX:返回文档/页面水平方向滚动的像素值
+	window.scrollY
+	window.scrollTo(x,y)/window.scroll(x,y):滚动到文档的某个坐标
+
+	el.scrollWidth:返回元素内容区域宽度或元素的本身的宽度中更大的那个值，若元素存在滚动条是，scrollWidth的值要大于clientWidth
+	el.scrollHeight:
+
+	el.scrollLeft:可以读取或设置元素滚动条到元素左边的距离
+	el.scrollTop:
+
+	
+	小结：（获取页面垂直和水平的滚动距离）
+
+	//判断是否支持pageXOffset
+	let supportPageXOffset = window.pageXOffset !==undefined;
+	//判断渲染模式是不是标准模式
+	let isCSSCompat = ((document.compatMode || '') === 'CSSCompat');
+
+	/**
+	 * 如果支持pageXOffset,直接用window.pageXOffset。如果不支持，判断渲染模式 
+	 * 如果是标准模式，document.documentElement.scrollLeft 
+	 * 如果是混合模式，用document.body.scrollLeft 
+	**/
+
+	let x = supportPageXOffset ? window.pageXOffset : isCSSCompat ? document.documentElement.scrollLeft : document.body.scrollLeft;
+
+	let y = supportPageXOffset ? window.pageYOffset : isCSSCompat ? document.documentElement.scrollHeight : document.body.scrollHeight;
+
+	判断是否滚动到底部：
+
+	el.scrollHeight - el.scrollTop === el.clientHeight;
